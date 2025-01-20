@@ -11,8 +11,8 @@
 <h3 class="p-5">Total books found : {{books|length}}</h3>
 <div class="d-flex flex-wrap p-5 gap-5">
     {% for book in books %}
-    <div class="card" style="width: 18rem;height:35vh">
-        <img src="{{book.image.url}}" class="card-img-top object-fit-cover" style="height:20vh" alt="...">
+    <div class="card" style="width: 18rem;height:55vh">
+        <img src="{{book.image.url}}" class="card-img-top object-fit-cover" style="height:25vh" alt="...">
         <div class="card-body">
             <h5 class="card-title">{{book.title}}</h5>
             <p class="card-text">{{book.description | truncatewords:8}}</p>
