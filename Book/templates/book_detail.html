@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="d-flex justify-content-center gap-4">
+    {% if book.image %}
+    <img src="{{book.image.url}}" class="object-fit-contain" style="height:40vh;width:25%"alt="">
+    {% endif %}
+    <div class="card p-2 bg-white w-75">
+        <h2>{{book.title}}</h2>
+        <p>{{book.description}}</p>
+        <p><b>Category:</b>
+            {% for cat in book.category.all %}
+              <button type="button" class="btn btn-primary btn-sm my-1">{{cat}}</button>
+            {% endfor %}
+        </p>
+        <p><b>Borrowing Price: </b>${{book.borrowing_price}}</p>
+        {% if not request.user.is_authenticated %}
+        <p><a href="{% url 'Login' %}" class="btn btn-primary">Login</a> to borrow book</p>
+        {% else %}
+        {% if has_read == True %}
+        <p>You already borrowed the book.</p>
+        {% else %}
+        <a href="{% url 'BorrowBook' book.id %}" class="btn btn-warning mx-auto">Borrow Book</a>
+        {% endif %}
+        {% endif %}
+    </div>
+</div>
+<div class="ms-2 mt-1 bg-white p-3">
+    {% if request.user.is_authenticated %}
+    {% if has_read == True %}
+    <h2>Give Review</h2>
+    <form method="post" class="my-1 border p-2">
+        {% csrf_token %}
+        {{review_form|crispy}}
+        <input type="submit" class="btn btn-success" value="Comment">
+    </form>
+    {% else %}
+    <h3>You have to borrow the book before writing a review on it.</h3>
+    {% endif %}
+    
+    {% else %}
+    <p><a href="{% url 'Login' %}" class="btn btn-primary">Login</a> to write a review</p>
+    {% endif %}
+    {% for review in reviews %}
+    <div class="my-1 border p-2">
+        <h3>{{review.account.user.username}}</h3>
+        <small>Commented at {{review.time}}</small>
+        <p>{{review.content}}</p>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock content %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container-fluid" style="background-color: rgba(53, 60, 102, 0.651);">
+    <h3 class="text-white">Filter</h3>
+    <div class="d-flex flex-wrap p-2 gap-2">
+        {% for cat in categories %}
+        <li><a href="{% url 'ShowAsFiltered' cat.slug %}" class="btn btn-dark">{{cat.name}}</a></li>
+        {% endfor %}
+    </div>
+</div>
+<h3 class="p-5">Total books found : {{books|length}}</h3>
+<div class="d-flex flex-wrap p-5 gap-5">
+    {% for book in books %}
+    <div class="card" style="width: 18rem;height:35vh">
+        <img src="{{book.image.url}}" class="card-img-top object-fit-cover" style="height:20vh" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">{{book.title}}</h5>
+            <p class="card-text">{{book.description | truncatewords:8}}</p>
+            <p class="card-text"><b>Borrowing Price: </b>${{book.borrowing_price}}</p>
+            <a href="{% url 'BookDetail' book.id %}" class="btn btn-primary">Details</a>
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+{% endblock content %}

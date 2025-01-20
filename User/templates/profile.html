@@ -1,0 +1,90 @@
+{% extends 'base.html' %} 
+{% load humanize %}
+{% block head_title %}Borrow Report{% endblock %} {% block content %}
+
+<h1>Welcome {{request.user}}</h1>
+<div class="my-10 py-3 px-4 bg-white rounded-xl shadow-md">
+  <h1 class="font-bold text-3xl text-center pb-5 pt-2">Borrow Report</h1>
+  <hr />
+  <form method="get" action="{% url 'Profile' %}">
+    <div class="flex justify-center">
+      <div
+        class="mt-10 pl-3 pr-2 bg-white border rounded-md border-gray-500 flex justify-between items-center relative w-4/12 mx-2"
+      >
+        <label for="start_date">From:</label>
+        <input
+          class="appearance-none w-full outline-none focus:outline-none active:outline-none"
+          type="date"
+          id="start_date"
+          name="start_date"
+        />
+      </div>
+ 
+      <div
+        class="mt-10 pl-3 pr-2 bg-white border rounded-md border-gray-500 flex justify-between items-center relative w-4/12"
+      >
+        <label for="end_date">To:</label>
+        <input
+          class="appearance-none w-full outline-none focus:outline-none active:outline-none"
+          type="date"
+          id="end_date"
+          name="end_date"
+        />
+      </div>
+      <div class="mt-10 pl-3 pr-2 flex justify-between items-center relative w-4/12">
+        <button
+          class="bg-blue-900 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          type="submit"
+        >
+          Filter
+        </button>
+      </div>
+    </div>
+  </form>
+  <table
+    class="table-auto mx-auto w-full px-5 rounded-xl mt-8 border dark:border-neutral-500"
+  >
+    <thead class="bg-purple-900 text-white text-left">
+      <tr
+        class="bg-gradient-to-tr from-indigo-600 to-purple-600 rounded-md py-2 px-4 text-white font-bold"
+      >
+        <th class="px-4 py-2">Borrow ID</th>
+        <th class="px-4 py-2">Book Title</th>
+        <th class="px-4 py-2">Borrowing Price</th>
+        <th class="px-4 py-2">Balance After Borrowing</th>
+        <th class="px-4 py-2">Borrowing Date</th>
+        <th class="px-4 py-2">Return</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- object_list is inbuilt and related to ListView -->
+      {% for borrow in borrow_list %}
+      <tr class="border-b dark:border-neutral-500">
+        <td class="px-4 py-2">
+           {{ borrow.id }}
+        </td>
+        <td class="px-4 py-2">
+           {{ borrow.book.title }}
+        </td>
+        <td class="px-4 py-2">
+            {{ borrow.book.borrowing_price|floatformat:2|intcomma }}
+        </td>
+        <td class="px-4 py-2">
+            $ {{ borrow.balance_after_borrowing|floatformat:2|intcomma }}
+        </td>
+        <td class="px-4 py-2">
+          {{ borrow.borrow_date|date:"F d, Y h:i A" }}
+        </td>
+        <td class="px-4 py-2">
+            {% if not borrow.is_returned %}
+            <a class="font-bold bg-red-900 text-white hover:text-blue-900 hover:bg-white border border-blue-900 font-bold px-4 py-2 rounded-lg text-decoration-none" href='{% url "ReturnBook" borrow.id %}'>Return</a>
+            {% else %}
+            <p class="font-bold text-green-700 bg-green-100">Returned</p>
+            {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
